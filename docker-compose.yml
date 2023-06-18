@@ -5,6 +5,8 @@ services:
     ports:
       - "8024:8024"
       - "8124:8124"
+    depends_on:
+      - jaeger
   mysql:
     image: mysql
     environment:
@@ -12,3 +14,11 @@ services:
       MYSQL_DATABASE: axonserver
     ports:
       - "3306:3306"
+  jaeger:
+    image: jaegertracing/all-in-one
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
