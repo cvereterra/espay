@@ -1,7 +1,11 @@
 version: "3"
 services:
   espay:
-    build: .
+    image: espay/customers-service-api
+    container_name: customers-service
+    build:
+      context: ./customers-service
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -20,6 +24,7 @@ services:
       - internal
   axon:
     image: axoniq/axonserver
+    container_name: axonserver
     ports:
       - "8024:8024"
       - "8124:8124"
@@ -29,6 +34,7 @@ services:
       - internal
   mysql:
     image: mysql
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: axonserver
@@ -42,6 +48,7 @@ services:
       - internal
   jaeger:
     image: jaegertracing/all-in-one
+    container_name: jaeger
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
     ports:
