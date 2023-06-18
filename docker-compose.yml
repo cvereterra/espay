@@ -1,5 +1,23 @@
-version: '3'
+version: "3"
 services:
+  espay:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      OTEL_SERVICE_NAME: espay
+      OTEL_METRICS_EXPORTER: none
+      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    depends_on:
+      mysql:
+        condition: service_healthy
+      axon:
+        condition: service_started
+      jaeger:
+        condition: service_started
+    networks:
+      - internal
   axon:
     image: axoniq/axonserver
     ports:
@@ -7,6 +25,8 @@ services:
       - "8124:8124"
     depends_on:
       - jaeger
+    networks:
+      - internal
   mysql:
     image: mysql
     environment:
@@ -14,11 +34,30 @@ services:
       MYSQL_DATABASE: axonserver
     ports:
       - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 5s
+      retries: 10
+    networks:
+      - internal
   jaeger:
     image: jaegertracing/all-in-one
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
     ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
       - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "14269:14269"
+      - "9411:9411"
       - "4317:4317"
       - "4318:4318"
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge

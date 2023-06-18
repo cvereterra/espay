@@ -6,6 +6,9 @@ import com.cvereterra.espay.query.CustomerView;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -14,10 +17,11 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping("customers")
 public class CustomerController {
-
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
+    private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
+    @Autowired
     public CustomerController(CommandGateway commandGateway, QueryGateway queryGateway) {
         this.commandGateway = commandGateway;
         this.queryGateway = queryGateway;
@@ -35,6 +39,7 @@ public class CustomerController {
 
     @GetMapping("/greet")
     public String greet() {
+        logger.info("hola");
         return "hi";
     }
 }
