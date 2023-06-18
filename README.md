@@ -10,3 +10,8 @@ payment processing solution.
 - **CQRS**: Separate read and write models for improved performance and scalability.
 - **Spring Boot**: Utilize the power of the Spring framework for rapid development and dependency management.
 - **Axon Framework**: Harness the benefits of Axon Framework to simplify event-driven microservices development.
+
+## Architecure
+
+The following diagram illustrates the architecture used as inspiration for this project.
+![Architecure](assets/architecture.jpg "Architecture")
