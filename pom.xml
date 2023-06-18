@@ -89,6 +89,11 @@
             <artifactId>opentelemetry-exporter-otlp</artifactId>
             <version>1.23.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-tracing-opentelemetry</artifactId>
+            <version>${axon.version}</version>
+        </dependency>
         <!-- Axon -->
         <dependency>
             <groupId>org.axonframework</groupId>
