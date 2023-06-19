@@ -19,6 +19,8 @@
         <module>espay-core</module>
         <module>customers-service</module>
         <module>payments-service</module>
+        <module>card-network-service</module>
+        <module>adquirer-service</module>
     </modules>
 
     <properties>

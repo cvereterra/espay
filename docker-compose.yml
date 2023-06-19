@@ -44,7 +44,50 @@ services:
         condition: service_started
     networks:
       - internal
-
+  card-network-service:
+    image: espay/card-network-service-api
+    container_name: card-network-service
+    build:
+      context: ./card-network-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      OTEL_SERVICE_NAME: card-network
+      OTEL_METRICS_EXPORTER: none
+      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    depends_on:
+      mysql:
+        condition: service_healthy
+      axon:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    networks:
+      - internal
+  adquirer-service:
+    image: espay/adquirer-service-api
+    container_name: adquirer-service
+    build:
+      context: ./adquirer-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      OTEL_SERVICE_NAME: adquirer
+      OTEL_METRICS_EXPORTER: none
+      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    depends_on:
+      mysql:
+        condition: service_healthy
+      axon:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    networks:
+      - internal
   axon:
     image: axoniq/axonserver:4.6.11-jdk-17-dev-nonroot
     container_name: axonserver
@@ -60,7 +103,6 @@ services:
       # test: curl -f http://axon:8024/actuator/health
       interval: 5s
       retries: 100
-
   mysql:
     image: mysql
     container_name: mysql
