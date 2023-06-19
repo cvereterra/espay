@@ -18,6 +18,7 @@
     <modules>
         <module>espay-core</module>
         <module>customers-service</module>
+        <module>payments-service</module>
     </modules>
 
     <properties>
