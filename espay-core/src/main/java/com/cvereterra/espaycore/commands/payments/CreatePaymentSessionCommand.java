@@ -1,16 +1,16 @@
 package com.cvereterra.espaycore.commands.payments;
 
-import lombok.Data;
+import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
+@Value
 public class CreatePaymentSessionCommand {
     @TargetAggregateIdentifier
-    private final UUID sessionId;
-    private final UUID merchantId;
-    private final BigDecimal amount;
-    private final String currency;
+    UUID sessionId;
+    UUID merchantId;
+    BigDecimal amount;
+    String currency;
 }

@@ -46,7 +46,7 @@ services:
       - internal
 
   axon:
-    image: axoniq/axonserver
+    image: axoniq/axonserver:4.6.11-jdk-17-dev-nonroot
     container_name: axonserver
     ports:
       - "8024:8024"
@@ -56,7 +56,8 @@ services:
     networks:
       - internal
     healthcheck:
-      test: curl -f http://axon:8024/actuator/health
+      test: [ "CMD", "curl" ,"-f", "http://axon:8024/actuator/health" ]
+      # test: curl -f http://axon:8024/actuator/health
       interval: 5s
       retries: 100
 

@@ -1,13 +1,13 @@
 package com.cvereterra.espaycore.commands.payments;
 
-import lombok.Data;
+import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.UUID;
 
-@Data
+@Value
 public class AssignPaymentSessionToCustomerCommand {
     @TargetAggregateIdentifier
-    private final UUID sessionId;
-    private final UUID customerId;
+    UUID sessionId;
+    UUID customerId;
 }

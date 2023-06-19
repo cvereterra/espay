@@ -1,15 +1,15 @@
 package com.cvereterra.espaycore.commands.customer;
 
-import lombok.Data;
+import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.UUID;
 
-@Data
+@Value
 public class CreateCustomerCommand {
     @TargetAggregateIdentifier
-    private final UUID customerId;
-    private final String name;
-    private final String email;
-    private final String address;
+    UUID customerId;
+    String name;
+    String email;
+    String address;
 }

@@ -1,10 +1,10 @@
 package com.cvereterra.espaycore.queries.customer;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.util.UUID;
 
-@Data
+@Value
 public class FindCustomerByIdQuery {
-    private final UUID customerId;
+    UUID customerId;
 }

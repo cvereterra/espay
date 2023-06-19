@@ -1,10 +1,10 @@
 package com.cvereterra.espaycore.queries.payments;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.util.UUID;
 
-@Data
+@Value
 public class FindPaymentSessionByIdQuery {
-    private final UUID sessionId;
+    UUID sessionId;
 }

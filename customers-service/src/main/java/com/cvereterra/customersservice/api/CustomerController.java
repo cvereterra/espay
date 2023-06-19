@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -28,6 +29,11 @@ public class CustomerController {
         this.queryGateway = queryGateway;
     }
 
+    @GetMapping("/health")
+    public Map<String, String> getHealth() {
+        return Map.of("status", "Ok");
+    }
+
     @PostMapping("/")
     public void createCustomer(@RequestBody CreateCustomerCommand command) {
         commandGateway.send(command);
@@ -36,11 +42,5 @@ public class CustomerController {
     @GetMapping("/{customerId}")
     public CompletableFuture<CustomerView> getCustomerById(@PathVariable("") String customerId) {
         return queryGateway.query(new FindCustomerByIdQuery(UUID.fromString(customerId)), ResponseTypes.instanceOf(CustomerView.class));
-    }
-
-    @GetMapping("/greet")
-    public String greet() {
-        logger.info("hola");
-        return "hi";
     }
 }
