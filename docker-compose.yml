@@ -1,6 +1,6 @@
 version: "3"
 services:
-  espay:
+  customers-service:
     image: espay/customers-service-api
     container_name: customers-service
     build:
@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      OTEL_SERVICE_NAME: espay
+      OTEL_SERVICE_NAME: customers
       OTEL_METRICS_EXPORTER: none
       OTEL_TRACE_EXPORTER: jaeger
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
@@ -17,11 +17,34 @@ services:
       mysql:
         condition: service_healthy
       axon:
-        condition: service_started
+        condition: service_healthy
       jaeger:
         condition: service_started
     networks:
       - internal
+  payments-service:
+    image: espay/payments-service-api
+    container_name: payments-service
+    build:
+      context: ./payments-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      OTEL_SERVICE_NAME: payments
+      OTEL_METRICS_EXPORTER: none
+      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+    depends_on:
+      mysql:
+        condition: service_healthy
+      axon:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    networks:
+      - internal
+
   axon:
     image: axoniq/axonserver
     container_name: axonserver
@@ -32,6 +55,11 @@ services:
       - jaeger
     networks:
       - internal
+    healthcheck:
+      test: curl -f http://axon:8024/actuator/health
+      interval: 5s
+      retries: 100
+
   mysql:
     image: mysql
     container_name: mysql

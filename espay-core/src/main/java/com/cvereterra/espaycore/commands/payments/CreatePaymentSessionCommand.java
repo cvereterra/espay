@@ -11,7 +11,6 @@ public class CreatePaymentSessionCommand {
     @TargetAggregateIdentifier
     private final UUID sessionId;
     private final UUID merchantId;
-    private final String name;
     private final BigDecimal amount;
     private final String currency;
 }
