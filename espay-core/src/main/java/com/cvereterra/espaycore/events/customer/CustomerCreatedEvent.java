@@ -12,4 +12,5 @@ public class CustomerCreatedEvent {
     String name;
     String email;
     String address;
+    String cardNumber;
 }

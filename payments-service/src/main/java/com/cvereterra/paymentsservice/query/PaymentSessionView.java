@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Setter
 public class PaymentSessionView {
@@ -22,7 +24,4 @@ public class PaymentSessionView {
     private String currency;
     private PaymentSessionStatus status;
     private BigDecimal amount;
-
-    public PaymentSessionView() {
-    }
 }

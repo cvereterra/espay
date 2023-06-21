@@ -14,23 +14,17 @@ import java.util.UUID;
 public class Customer {
     @AggregateIdentifier
     private UUID customerId;
-    private String name;
-    private String email;
-    private String address;
 
     public Customer() {
     }
 
     @CommandHandler
     public Customer(CreateCustomerCommand command) {
-        AggregateLifecycle.apply(new CustomerCreatedEvent(command.getCustomerId(), command.getName(), command.getEmail(), command.getAddress()));
+        AggregateLifecycle.apply(new CustomerCreatedEvent(command.getCustomerId(), command.getName(), command.getEmail(), command.getAddress(), command.getCardNumber()));
     }
 
     @EventSourcingHandler
     public void on(CustomerCreatedEvent event) {
         this.customerId = event.getCustomerId();
-        this.name = event.getName();
-        this.email = event.getEmail();
-        this.address = event.getAddress();
     }
 }

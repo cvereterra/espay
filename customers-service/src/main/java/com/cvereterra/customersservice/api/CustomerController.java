@@ -40,7 +40,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerId}")
-    public CompletableFuture<CustomerView> getCustomerById(@PathVariable("") String customerId) {
+    public CompletableFuture<CustomerView> getCustomerById(@PathVariable("customerId") String customerId) {
         return queryGateway.query(new FindCustomerByIdQuery(UUID.fromString(customerId)), ResponseTypes.instanceOf(CustomerView.class));
     }
 }

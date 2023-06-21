@@ -12,4 +12,5 @@ public class CreateCustomerCommand {
     String name;
     String email;
     String address;
+    String cardNumber;
 }

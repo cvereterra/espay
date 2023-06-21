@@ -28,7 +28,8 @@ public class CustomerProjector {
                 event.getCustomerId(),
                 event.getName(),
                 event.getEmail(),
-                event.getAddress()
+                event.getAddress(),
+                event.getCardNumber()
         );
         customerRepository.save(customerView);
     }
