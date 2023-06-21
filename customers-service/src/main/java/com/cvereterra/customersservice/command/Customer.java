@@ -28,9 +28,9 @@ public class Customer {
 
     @EventSourcingHandler
     public void on(CustomerCreatedEvent event) {
-        customerId = event.getCustomerId();
-        name = event.getName();
-        email = event.getEmail();
-        address = event.getAddress();
+        this.customerId = event.getCustomerId();
+        this.name = event.getName();
+        this.email = event.getEmail();
+        this.address = event.getAddress();
     }
 }

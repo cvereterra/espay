@@ -7,10 +7,11 @@ import com.cvereterra.espaycore.commands.cardnetwork.AuthorizePaymentSessionComm
 import com.cvereterra.espaycore.commands.cardnetwork.RejectPaymentSessionCommand;
 import com.cvereterra.espaycore.events.adquirer.MerchantPayedEvent;
 import com.cvereterra.espaycore.events.adquirer.PaymentAdquiredEvent;
+import com.cvereterra.espaycore.events.adquirer.PaymentAdquiringFailedEvent;
 import com.cvereterra.espaycore.events.cardnetwork.PaymentSessionAuthorizedEvent;
+import com.cvereterra.espaycore.events.cardnetwork.PaymentSessionRejectedEvent;
 import com.cvereterra.espaycore.events.payments.PaymentSessionAssignedToCustomerEvent;
 import com.cvereterra.espaycore.events.payments.PaymentSessionCreatedEvent;
-import com.cvereterra.paymentsservice.api.PaymentController;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
@@ -23,10 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Saga
 public class PaymentManagementSaga {
+    private static final Logger logger = LoggerFactory.getLogger(PaymentManagementSaga.class);
     @Autowired
     private transient CommandGateway commandGateway;
-    private Logger logger = LoggerFactory.getLogger(PaymentController.class);
-
 
     @StartSaga
     @SagaEventHandler(associationProperty = "sessionId")
@@ -53,10 +53,25 @@ public class PaymentManagementSaga {
     }
 
     @SagaEventHandler(associationProperty = "sessionId")
+    public void handle(PaymentSessionRejectedEvent event) {
+        logger.info("Saga handling PaymentSessionRejectedEvent");
+        logger.info("Saga ended");
+        SagaLifecycle.end();
+    }
+
+    @SagaEventHandler(associationProperty = "sessionId")
     public void handle(PaymentAdquiredEvent event) {
         logger.info("Saga handling PaymentAdquiredEvent");
         commandGateway.send(new PayMerchantCommand(event.getSessionId()));
     }
+
+    @SagaEventHandler(associationProperty = "sessionId")
+    public void handle(PaymentAdquiringFailedEvent event) {
+        logger.info("Saga handling PaymentAdquiringFailedEvent");
+        logger.info("Saga ended");
+        SagaLifecycle.end();
+    }
+
 
     @SagaEventHandler(associationProperty = "sessionId")
     public void handle(MerchantPayedEvent event) {

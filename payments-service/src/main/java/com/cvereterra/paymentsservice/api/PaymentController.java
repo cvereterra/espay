@@ -1,7 +1,7 @@
 package com.cvereterra.paymentsservice.api;
 
-import com.cvereterra.espaycore.commands.customer.CreateCustomerCommand;
 import com.cvereterra.espaycore.commands.payments.AssignPaymentSessionToCustomerCommand;
+import com.cvereterra.espaycore.commands.payments.CreatePaymentSessionCommand;
 import com.cvereterra.espaycore.queries.payments.FindPaymentSessionByIdQuery;
 import com.cvereterra.paymentsservice.query.PaymentSessionView;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -40,7 +40,7 @@ public class PaymentController {
     }
 
     @PostMapping("/")
-    public void createPaymentSession(@RequestBody CreateCustomerCommand command) {
+    public void createPaymentSession(@RequestBody CreatePaymentSessionCommand command) {
         commandGateway.send(command);
     }
 

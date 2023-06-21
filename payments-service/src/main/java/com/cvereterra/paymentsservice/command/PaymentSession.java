@@ -53,7 +53,7 @@ public class PaymentSession {
     }
 
     @CommandHandler
-    public PaymentSession(AssignPaymentSessionToCustomerCommand command) {
+    public void handle(AssignPaymentSessionToCustomerCommand command) {
         logger.info("Handling AssignPaymentSessionToCustomerCommand {}", command);
         AggregateLifecycle.apply(new PaymentSessionAssignedToCustomerEvent(
                 command.getSessionId(),
@@ -62,7 +62,7 @@ public class PaymentSession {
     }
 
     @CommandHandler
-    public PaymentSession(AuthorizePaymentSessionCommand command) {
+    public void handle(AuthorizePaymentSessionCommand command) {
         logger.info("Handling AuthorizePaymentSessionCommand {}", command);
         AggregateLifecycle.apply(new PaymentSessionAuthorizedEvent(
                 command.getSessionId()
@@ -70,7 +70,7 @@ public class PaymentSession {
     }
 
     @CommandHandler
-    public PaymentSession(RejectPaymentSessionCommand command) {
+    public void handle(RejectPaymentSessionCommand command) {
         logger.info("Handling RejectPaymentSessionCommand {}", command);
         AggregateLifecycle.apply(new PaymentSessionRejectedEvent(
                 command.getSessionId()
@@ -78,7 +78,7 @@ public class PaymentSession {
     }
 
     @CommandHandler
-    public PaymentSession(AdquirePaymentCommand command) {
+    public void handle(AdquirePaymentCommand command) {
         logger.info("Handling AdquirePaymentCommand {}", command);
         AggregateLifecycle.apply(new PaymentAdquiredEvent(
                 command.getSessionId()
@@ -86,7 +86,7 @@ public class PaymentSession {
     }
 
     @CommandHandler
-    public PaymentSession(RejectPaymentAdquirementCommand command) {
+    public void handle(RejectPaymentAdquirementCommand command) {
         logger.info("Handling RejectPaymentAdquirementCommand {}", command);
         AggregateLifecycle.apply(new PaymentAdquiringFailedEvent(
                 command.getSessionId()
@@ -94,7 +94,7 @@ public class PaymentSession {
     }
 
     @CommandHandler
-    public PaymentSession(PayMerchantCommand command) {
+    public void handle(PayMerchantCommand command) {
         logger.info("Handling PayMerchantCommand {}", command);
         AggregateLifecycle.apply(new MerchantPayedEvent(
                 command.getSessionId()
@@ -105,54 +105,48 @@ public class PaymentSession {
     @EventSourcingHandler
     public void on(PaymentSessionCreatedEvent event) {
         logger.info("Sourcing PaymentSessionCreatedEvent {}", event);
-        sessionId = event.getSessionId();
-        merchantId = event.getMerchantId();
-        customerId = null;
-        currency = event.getCurrency();
-        amount = event.getAmount();
-        status = PaymentSessionStatus.CREATED;
+        this.sessionId = event.getSessionId();
+        this.merchantId = event.getMerchantId();
+        this.customerId = null;
+        this.currency = event.getCurrency();
+        this.amount = event.getAmount();
+        this.status = PaymentSessionStatus.CREATED;
     }
 
     @EventSourcingHandler
     public void on(PaymentSessionAssignedToCustomerEvent event) {
         logger.info("Sourcing PaymentSessionAssignedToCustomerEvent {}", event);
-        sessionId = event.getSessionId();
-        customerId = event.getCustomerId();
-        status = PaymentSessionStatus.ASSIGNED_TO_CUSTOMER;
+        this.customerId = event.getCustomerId();
+        this.status = PaymentSessionStatus.ASSIGNED_TO_CUSTOMER;
     }
 
     @EventSourcingHandler
     public void on(PaymentSessionAuthorizedEvent event) {
         logger.info("Sourcing PaymentSessionAuthorizedEvent {}", event);
-        sessionId = event.getSessionId();
-        status = PaymentSessionStatus.AUTHORIZED_BY_CARD_NETWORK;
+        this.status = PaymentSessionStatus.AUTHORIZED_BY_CARD_NETWORK;
     }
 
     @EventSourcingHandler
     public void on(PaymentSessionRejectedEvent event) {
         logger.info("Sourcing PaymentSessionRejectedEvent {}", event);
-        sessionId = event.getSessionId();
-        status = PaymentSessionStatus.REJECTED_BY_CARD_NETWORK;
+        this.status = PaymentSessionStatus.REJECTED_BY_CARD_NETWORK;
     }
 
     @EventSourcingHandler
     public void on(PaymentAdquiredEvent event) {
         logger.info("Sourcing PaymentAdquiredEvent {}", event);
-        sessionId = event.getSessionId();
-        status = PaymentSessionStatus.ADQUIRED;
+        this.status = PaymentSessionStatus.ADQUIRED;
     }
 
     @EventSourcingHandler
     public void on(PaymentAdquiringFailedEvent event) {
         logger.info("Sourcing PaymentAdquiringFailedEvent {}", event);
-        sessionId = event.getSessionId();
-        status = PaymentSessionStatus.ADQUIRING_FAILED;
+        this.status = PaymentSessionStatus.ADQUIRING_FAILED;
     }
 
     @EventSourcingHandler
     public void on(MerchantPayedEvent event) {
         logger.info("Sourcing MerchantPayedEvent {}", event);
-        sessionId = event.getSessionId();
-        status = PaymentSessionStatus.TRANSFERED_TO_MERCHANT;
+        this.status = PaymentSessionStatus.TRANSFERED_TO_MERCHANT;
     }
 }
