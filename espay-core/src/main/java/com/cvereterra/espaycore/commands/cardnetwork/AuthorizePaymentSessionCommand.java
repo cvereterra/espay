@@ -1,4 +1,4 @@
-package com.cvereterra.espaycore.commands.payments;
+package com.cvereterra.espaycore.commands.cardnetwork;
 
 import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;

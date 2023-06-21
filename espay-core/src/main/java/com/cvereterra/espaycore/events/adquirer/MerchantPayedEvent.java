@@ -1,4 +1,4 @@
-package com.cvereterra.espaycore.events.payments;
+package com.cvereterra.espaycore.events.adquirer;
 
 import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
@@ -6,7 +6,8 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import java.util.UUID;
 
 @Value
-public class PaymentSessionAuthorizedEvent {
+public class MerchantPayedEvent {
     @TargetAggregateIdentifier
     UUID sessionId;
+
 }
