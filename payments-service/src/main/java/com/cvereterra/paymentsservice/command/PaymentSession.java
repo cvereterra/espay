@@ -23,18 +23,15 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Aggregate
 public class PaymentSession {
     @AggregateIdentifier
     private UUID sessionId;
-    private UUID merchantId;
-    private String currency;
-    private BigDecimal amount;
-    private UUID customerId;
-    private PaymentSessionStatus status;
+    private AuthorizationStatus cardNetworkAuthorizationStatus;
+    private AuthorizationStatus adquirerAuthorizationStatus;
+
     private Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
 
@@ -64,6 +61,9 @@ public class PaymentSession {
     @CommandHandler
     public void handle(AuthorizePaymentSessionCommand command) {
         logger.info("Handling AuthorizePaymentSessionCommand {}", command);
+        if (cardNetworkAuthorizationStatus != AuthorizationStatus.PENDING) {
+            throw new IllegalStateException("Card network is authorizing an already processed payment");
+        }
         AggregateLifecycle.apply(new PaymentSessionAuthorizedEvent(
                 command.getSessionId()
         ));
@@ -72,6 +72,9 @@ public class PaymentSession {
     @CommandHandler
     public void handle(RejectPaymentSessionCommand command) {
         logger.info("Handling RejectPaymentSessionCommand {}", command);
+        if (cardNetworkAuthorizationStatus != AuthorizationStatus.PENDING) {
+            throw new IllegalStateException("Card network is rejecting an already processed payment");
+        }
         AggregateLifecycle.apply(new PaymentSessionRejectedEvent(
                 command.getSessionId()
         ));
@@ -80,6 +83,12 @@ public class PaymentSession {
     @CommandHandler
     public void handle(AdquirePaymentCommand command) {
         logger.info("Handling AdquirePaymentCommand {}", command);
+        if (cardNetworkAuthorizationStatus != AuthorizationStatus.AUTHORIZED) {
+            throw new IllegalStateException("Adquirer trying to process rejected payment by the card network");
+        }
+        if (adquirerAuthorizationStatus != AuthorizationStatus.PENDING) {
+            throw new IllegalStateException("Adquirer is approving an already processed payment");
+        }
         AggregateLifecycle.apply(new PaymentAdquiredEvent(
                 command.getSessionId()
         ));
@@ -88,6 +97,12 @@ public class PaymentSession {
     @CommandHandler
     public void handle(RejectPaymentAdquirementCommand command) {
         logger.info("Handling RejectPaymentAdquirementCommand {}", command);
+        if (cardNetworkAuthorizationStatus != AuthorizationStatus.AUTHORIZED) {
+            throw new IllegalStateException("Adquirer is trying to process rejected payment by the card network");
+        }
+        if (adquirerAuthorizationStatus != AuthorizationStatus.PENDING) {
+            throw new IllegalStateException("Adquirer is rejecting an already processed payment");
+        }
         AggregateLifecycle.apply(new PaymentAdquiringFailedEvent(
                 command.getSessionId()
         ));
@@ -106,47 +121,42 @@ public class PaymentSession {
     public void on(PaymentSessionCreatedEvent event) {
         logger.info("Sourcing PaymentSessionCreatedEvent {}", event);
         this.sessionId = event.getSessionId();
-        this.merchantId = event.getMerchantId();
-        this.customerId = null;
-        this.currency = event.getCurrency();
-        this.amount = event.getAmount();
-        this.status = PaymentSessionStatus.CREATED;
+        this.cardNetworkAuthorizationStatus = AuthorizationStatus.PENDING;
+        this.adquirerAuthorizationStatus = AuthorizationStatus.PENDING;
+
     }
 
     @EventSourcingHandler
     public void on(PaymentSessionAssignedToCustomerEvent event) {
         logger.info("Sourcing PaymentSessionAssignedToCustomerEvent {}", event);
-        this.customerId = event.getCustomerId();
-        this.status = PaymentSessionStatus.ASSIGNED_TO_CUSTOMER;
     }
 
     @EventSourcingHandler
     public void on(PaymentSessionAuthorizedEvent event) {
         logger.info("Sourcing PaymentSessionAuthorizedEvent {}", event);
-        this.status = PaymentSessionStatus.AUTHORIZED_BY_CARD_NETWORK;
+        this.cardNetworkAuthorizationStatus = AuthorizationStatus.AUTHORIZED;
     }
 
     @EventSourcingHandler
     public void on(PaymentSessionRejectedEvent event) {
         logger.info("Sourcing PaymentSessionRejectedEvent {}", event);
-        this.status = PaymentSessionStatus.REJECTED_BY_CARD_NETWORK;
+        this.cardNetworkAuthorizationStatus = AuthorizationStatus.REJECTED;
     }
 
     @EventSourcingHandler
     public void on(PaymentAdquiredEvent event) {
         logger.info("Sourcing PaymentAdquiredEvent {}", event);
-        this.status = PaymentSessionStatus.ADQUIRED;
+        this.adquirerAuthorizationStatus = AuthorizationStatus.AUTHORIZED;
     }
 
     @EventSourcingHandler
     public void on(PaymentAdquiringFailedEvent event) {
         logger.info("Sourcing PaymentAdquiringFailedEvent {}", event);
-        this.status = PaymentSessionStatus.ADQUIRING_FAILED;
+        this.adquirerAuthorizationStatus = AuthorizationStatus.REJECTED;
     }
 
     @EventSourcingHandler
     public void on(MerchantPayedEvent event) {
         logger.info("Sourcing MerchantPayedEvent {}", event);
-        this.status = PaymentSessionStatus.TRANSFERED_TO_MERCHANT;
     }
 }
