@@ -1,5 +1,7 @@
 # espay
 
+![espay](assets/espay-logo.png "espay")
+
 `espay` is a robust and scalable payment system built using Spring Boot and Axon Framework. It leverages the power of
 event sourcing and CQRS (Command Query Responsibility Segregation) architecture to provide a streamlined and efficient
 payment processing solution.
