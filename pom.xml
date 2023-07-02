@@ -21,6 +21,8 @@
         <module>payments-service</module>
         <module>card-network-service</module>
         <module>adquirer-service</module>
+        <module>gateway-service</module>
+        <module>discovery-service</module>
     </modules>
 
     <properties>
@@ -46,13 +48,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Axon -->
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring-boot-starter</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -75,6 +70,12 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- Axon -->
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-spring-boot-starter</artifactId>
+                <version>${axon.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

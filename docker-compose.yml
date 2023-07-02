@@ -1,5 +1,29 @@
 version: "3"
 services:
+  gateway-service:
+    image: espay/gateway-service
+    container_name: gateway-service
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    depends_on:
+      - discovery-service
+    ports:
+      - "8762:8762"
+    networks:
+      - internal
+
+  discovery-service:
+    image: espay/discovery-service
+    container_name: discovery-service
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - internal
+
   customers-service:
     image: espay/customers-service-api
     container_name: customers-service
@@ -22,6 +46,7 @@ services:
         condition: service_started
     networks:
       - internal
+
   payments-service:
     image: espay/payments-service-api
     container_name: payments-service
@@ -44,6 +69,7 @@ services:
         condition: service_started
     networks:
       - internal
+
   card-network-service:
     image: espay/card-network-service-api
     container_name: card-network-service
@@ -66,6 +92,7 @@ services:
         condition: service_started
     networks:
       - internal
+
   adquirer-service:
     image: espay/adquirer-service-api
     container_name: adquirer-service
@@ -88,6 +115,7 @@ services:
         condition: service_started
     networks:
       - internal
+
   axon:
     image: axoniq/axonserver:4.6.11-jdk-17-dev-nonroot
     container_name: axonserver
@@ -103,6 +131,7 @@ services:
       # test: curl -f http://axon:8024/actuator/health
       interval: 5s
       retries: 100
+
   mysql:
     image: mysql
     container_name: mysql
@@ -117,6 +146,7 @@ services:
       retries: 10
     networks:
       - internal
+
   jaeger:
     image: jaegertracing/all-in-one
     container_name: jaeger
