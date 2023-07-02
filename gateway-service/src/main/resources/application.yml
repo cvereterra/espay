@@ -10,7 +10,19 @@ spring:
           enabled: true
           lowerCaseServiceId: true
       routes:
-        - id: card-network-service
+        - id: espay-adquirer
+          uri: lb://ESPAY-ADQUIRER
+          predicates:
+            - Path=/adquirers/**
+        - id: espay-card-network
+          uri: lb://ESPAY-CARD-NETWORK
+          predicates:
+            - Path=/card-networks/**
+        - id: espay-customers
+          uri: lb://ESPAY-CUSTOMERS
+          predicates:
+            - Path=/customers/**
+        - id: espay-payments
           uri: lb://ESPAY-PAYMENTS
           predicates:
             - Path=/payments/**
