@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("card")
+@RequestMapping("adquirers")
 public class AdquirerController {
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;

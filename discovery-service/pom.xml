@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>adquirer-service</artifactId>
+    <artifactId>discovery-service</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -19,52 +19,14 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.cvereterra</groupId>
-            <artifactId>espay-core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <!-- Axon -->
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-test</artifactId>
-            <version>${axon.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- DB connectors -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
     </dependencies>
 
