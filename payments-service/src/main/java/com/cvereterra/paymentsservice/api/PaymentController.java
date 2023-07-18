@@ -4,6 +4,7 @@ import com.cvereterra.espaycore.commands.payments.AssignPaymentSessionToCustomer
 import com.cvereterra.espaycore.commands.payments.CreatePaymentSessionCommand;
 import com.cvereterra.espaycore.queries.payments.FindPaymentSessionByIdQuery;
 import com.cvereterra.paymentsservice.query.PaymentSessionView;
+import io.micrometer.observation.ObservationRegistry;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
@@ -21,12 +22,14 @@ import java.util.concurrent.CompletableFuture;
 public class PaymentController {
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
+    private final ObservationRegistry observationRegistry;
     private Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
     @Autowired
-    public PaymentController(CommandGateway commandGateway, QueryGateway queryGateway) {
+    public PaymentController(CommandGateway commandGateway, QueryGateway queryGateway, ObservationRegistry observationRegistry) {
         this.commandGateway = commandGateway;
         this.queryGateway = queryGateway;
+        this.observationRegistry = observationRegistry;
     }
 
     @GetMapping("/health")

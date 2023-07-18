@@ -17,8 +17,8 @@ public class CardNetworkProjector {
     private final CardNetworkRepository cardNetworkRepository;
     private Logger logger = LoggerFactory.getLogger(CardNetworkProjector.class);
 
-    public CardNetworkProjector(CardNetworkRepository paymentSessionRepository) {
-        this.cardNetworkRepository = paymentSessionRepository;
+    public CardNetworkProjector(CardNetworkRepository cardNetworkRepository) {
+        this.cardNetworkRepository = cardNetworkRepository;
     }
 
     @EventHandler

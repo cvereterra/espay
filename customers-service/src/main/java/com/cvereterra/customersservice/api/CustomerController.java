@@ -43,4 +43,10 @@ public class CustomerController {
     public CompletableFuture<CustomerView> getCustomerById(@PathVariable("customerId") String customerId) {
         return queryGateway.query(new FindCustomerByIdQuery(UUID.fromString(customerId)), ResponseTypes.instanceOf(CustomerView.class));
     }
+
+    @GetMapping("/{customerId}/card-number")
+    public CompletableFuture<String> getCustomerCardNumberById(@PathVariable("customerId") String customerId) {
+        return queryGateway.query(new FindCustomerByIdQuery(UUID.fromString(customerId)), ResponseTypes.instanceOf(CustomerView.class)).thenApplyAsync(CustomerView::getCardNumber);
+    }
+
 }
